@@ -7,18 +7,13 @@ class ShowUserProfileController {
 
     handle(request: Request, response: Response): Response {
         const { user_id } = request.params;
-        const user = this.showUserProfileUseCase.execute({ user_id });
-        let returnCode = 200;
-        let message = {};
 
-        if (!user) {
-            returnCode = 404;
-            message = { error: "User not found!" };
-        } else {
-            message = user;
+        try {
+            const user = this.showUserProfileUseCase.execute({ user_id });
+            return response.status(200).json(user);
+        } catch (error) {
+            return response.status(404).json({ error: error.message });
         }
-
-        return response.status(returnCode).json(message);
     }
 }
 
